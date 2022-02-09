@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+    app:
+        build: .
+        command: yarn start:dev
+        container_name: countryapi
+        ports:
+            - 3000:3000
+        volumes:
+            - .:/usr/app
+            - /usr/app/node_modules
+
+    postgres:
+        image: postgres
+        container_name: countrydb
+        restart: always
+        environment:
+            - POSTGRES_USER=${DATABASE_USER}
+            - POSTGRES_DB=${DATABASE_DB}
+            - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+        expose:
+            - 5432
+        ports:
+            - 5432:5432
+        volumes:
+            - ./prisma/dataDev/data:/var
