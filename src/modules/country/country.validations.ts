@@ -1,8 +1,10 @@
 import Joi from "joi";
 
-const createCountryValidation = Joi.object({
+export const createCountryValidation = Joi.object({
 	name: Joi.string().required(),
 	capital: Joi.string().required(),
 });
 
-export default createCountryValidation;
+export const ReadCountryValidation = Joi.object({
+	states: Joi.boolean().required(),
+});

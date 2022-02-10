@@ -12,4 +12,10 @@ export default class CountryController {
 		const newCountry = await this.countryService.registerCountry({ name, capital });
 		res.status(201).json({ status: "success", country: newCountry });
 	}
+
+	async read(req: Request, res: Response) {
+		const { states } = req.query;
+		const countries = await this.countryService.getCountries(states as unknown as boolean);
+		res.status(200).json({ status: "success", countries });
+	}
 }

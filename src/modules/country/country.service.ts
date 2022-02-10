@@ -11,4 +11,8 @@ export default class CountryService implements ICountryService {
 	async registerCountry({ name, capital }: Omit<Country, "id">) {
 		return this.countryRepository.insertCountry({ name, capital });
 	}
+
+	async getCountries(states: boolean) {
+		return this.countryRepository.getCountries(states);
+	}
 }
