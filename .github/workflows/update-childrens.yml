@@ -6,7 +6,6 @@ jobs:
   propagate:
     name: Propagate template changes
     # Most likely you don't want to run this action on the template forks
-    if: github.repository == 'Joao-1/CountryData'
     runs-on: ubuntu-latest
     steps:
     - uses: tenpureto/propagate-changes-action@v1
