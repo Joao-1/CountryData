@@ -1,16 +1,33 @@
-FROM node:alpine
+# build
+FROM node:18-alpine as build
 
-WORKDIR /usr/app
+WORKDIR /build
+ARG NPM_TOKEN
 
-COPY package.json yarn.lock tsconfig.json ./
-RUN yarn
+COPY package.json .
+COPY package-lock.json .
+
+RUN echo "@qeshdev:registry=https://npm.pkg.github.com/\n//npm.pkg.github.com/:_authToken=$NPM_TOKEN" > .npmrc
+RUN npm install
 
 COPY . .
+RUN npm run build
 
-RUN yarn build
+RUN rm -rf node_modules
+RUN npm install --omit=dev
 
-EXPOSE 3000
+# production
+FROM node:18-alpine
 
-RUN apk add --no-cache bash
+WORKDIR /app
 
-CMD ["yarn", "start"]
+COPY scripts/startApp.sh start.sh
+
+COPY prisma prisma
+COPY --from=build /build/node_modules node_modules
+COPY --from=build /build/dist dist
+
+RUN sed -i 's/\r$//' start.sh  && \
+    chmod +x start.sh
+
+ENTRYPOINT ["./start.sh"]
